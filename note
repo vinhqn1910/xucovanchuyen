@@ -1,0 +1,342 @@
+// Import các module Firebase từ SDK
+import { auth, db } from './firebase-config.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { collection, query, where, getDocs, doc, addDoc, orderBy, limit, getFirestore } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+// Firebase initialization
+// Lấy `ticketId` từ URL
+const urlParams = new URLSearchParams(window.location.search);
+const ticketId = urlParams.get('ticket');
+
+// Kiểm tra giá trị của ticketId để đảm bảo nó không phải null hoặc undefined
+if (!ticketId) {
+    alert("Không tìm thấy ticketId trong URL.");
+    throw new Error("Không tìm thấy ticketId trong URL.");
+}
+
+// Thử truy vấn trực tiếp theo trường `ticket` (chứ không phải `ticketId`)
+db.collection("incidentReports").where("ticket", "==", ticketId).get()
+    .then(querySnapshot => {
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach(doc => {
+                console.log("Document ID: ", doc.id); // Kiểm tra document ID
+                const data = doc.data();
+                updateTicketDetails(data);
+            });
+        } else {
+            alert(`Không tìm thấy ticket với ID: ${ticketId}`);
+        }
+    })
+    .catch(error => {
+        console.error("Lỗi khi truy vấn ticket:", error);
+        alert("Lỗi khi truy vấn ticket: " + error.message);
+    });
+
+// Hàm cập nhật thông tin ticket vào các phần tử DOM
+function updateTicketDetails(data) {
+    const fields = [
+        { id: 'ticket', value: data.ticket },
+        { id: 'username', value: data.username },
+        { id: 'maSO', value: data.maSO },
+        { id: 'maDHGHTK', value: data.maDHGHTK },
+        { id: 'deliveryname', value: data.deliveryname },
+        { id: 'issueType', value: data.issueType },
+        { id: 'sendingStore', value: data.sendingStore },
+        { id: 'receivingStore', value: data.receivingStore },
+        { id: 'thoiGianGui', value: data.thoiGianGui },
+        { id: 'userbaocao', value: data.userbaocao },
+        { id: 'suCo', value: data.suCo },
+        { id: 'solutionDirection', value: data.solutionDirection },
+        { id: 'compensationType', value: data.compensationType },
+        { id: 'compensationAmount', value: data.compensationAmount },
+        { id: 'SOthanhly', value: data.SOthanhly },
+        { id: 'RPOC', value: data.RPOC },
+        { id: 'status', value: data.status },
+        { id: 'note', value: data.note },
+    ];
+
+    // Danh sách các trường cần đổi màu xanh lá
+    const greenFields = ['status','RPOC','SOthanhly','userbaocao','compensationAmount',];
+    // Danh sách các trường cần đổi màu đỏ
+    const redFields = ['username'];
+    // Danh sách các trường cần đổi màu xanh dương
+    const blueFields = ['note','compensationType','solutionDirection','receivingStore','suCo','sendingStore','issueType','maDHGHTK','thoiGianGui','ticket','maSO', 'deliveryname'];
+
+    fields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (element) {
+            if (field.value) {
+                element.textContent = field.value || '';  // Hiển thị dữ liệu
+                element.parentElement.style.display = 'block';  // Hiển thị trường có dữ liệu
+            } else {
+                element.parentElement.style.display = 'none';  // Ẩn trường nếu không có dữ liệu
+            }
+            // Đổi màu cho các trường nằm trong danh sách greenFields
+            if (greenFields.includes(field.id)) {
+                element.style.color = 'green'; // Màu chữ xanh
+                element.style.fontWeight = 'bold'; // (Tuỳ chọn) Làm chữ đậm
+            }
+            // Đổi màu cho các trường nằm trong danh sách redFields
+            if (redFields.includes(field.id)) {
+                element.style.color = 'red'; // Màu chữ xanh
+                element.style.fontWeight = 'bold'; // (Tuỳ chọn) Làm chữ đậm
+            }
+            // Đổi màu cho các trường nằm trong danh sách blueFields
+            if (blueFields.includes(field.id)) {
+                element.style.color = 'blue'; // Màu chữ xanh
+                element.style.fontWeight = 'bold'; // (Tuỳ chọn) Làm chữ đậm
+            }
+        }
+    });
+}
+
+// Hàm định dạng số tiền với dấu phẩy
+function formatCurrency(amount) {
+    if (!amount) return '';
+    return Number(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
+
+// Xử lý sự kiện chỉnh sửa thông tin ticket
+document.addEventListener('DOMContentLoaded', function () {
+    const editBtn = document.getElementById('editBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    editBtn.addEventListener('click', enableEditMode);
+    saveBtn.addEventListener('click', saveTicketInfo);
+    cancelBtn.addEventListener('click', cancelEdit);
+
+    document.body.addEventListener('change', function (e) {
+        const { id, value } = e.target;
+        if (id === 'issueType') {
+            toggleReceivingStore(value);
+        } else if (id === 'compensationType') {
+            toggleCompensationAmount(value);
+        }
+    });
+});
+
+// Thêm bình luận mới
+document.getElementById('submitCommentBtn').addEventListener('click', submitComment);
+
+// Lấy và hiển thị bình luận (mới nhất trên cùng)
+function loadComments() {
+    const commentsList = document.getElementById('commentsList');
+    db.collection('tickets').doc(ticketId).collection('comments')
+        .orderBy('timestamp', 'desc') // Sắp xếp theo thời gian, mới nhất trước
+        .get()
+        .then(snapshot => {
+            commentsList.innerHTML = ''; // Clear hiện tại
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment');
+
+                // Hiển thị user và time kế bên nhau
+                commentDiv.innerHTML = `
+                    <div class="comment-header">
+                        <strong class="username">${data.username}</strong> 
+                        <span class="comment-time">${data.timestamp.toDate().toLocaleString()}</span>
+                    </div>
+                    <div class="comment-text">
+                        ${data.text}
+                    </div>
+                `;
+                commentsList.appendChild(commentDiv);
+            });
+        });
+}
+
+// Thêm bình luận mới với ID tăng dần
+function submitComment() {
+    const newComment = document.getElementById('newComment').value;
+    if (newComment.trim() !== '') {
+        // Kiểm tra trạng thái đăng nhập của người dùng
+        auth.onAuthStateChanged(async (user) => { // Sửa `onAuthStateChanged` để sử dụng từ đối tượng `auth`
+            if (user) {
+                try {
+                    // Truy vấn thông tin người dùng từ Firestore
+                    const usersRef = db.collection("employees");
+                    const querySnapshot = await usersRef.where("userId", "==", user.uid).get();
+
+                    if (!querySnapshot.empty) {
+                        const userDoc = querySnapshot.docs[0];
+                        const userData = userDoc.data();
+                        const username = userData.username || "Unknown User";
+                        const name = userData.name || "Unknown Name";
+
+                        // Lấy số thứ tự bình luận cao nhất
+                        const lastCommentSnapshot = await db.collection('tickets').doc(ticketId).collection('comments')
+                            .orderBy('commentNumber', 'desc')
+                            .limit(1)
+                            .get();
+
+                        let newCommentNumber = 1; // Mặc định là bình luận đầu tiên
+                        if (!lastCommentSnapshot.empty) {
+                            const lastComment = lastCommentSnapshot.docs[0].data();
+                            newCommentNumber = lastComment.commentNumber + 1; // Tăng số thứ tự
+                        }
+
+                        // Thêm bình luận mới
+                        await db.collection('tickets').doc(ticketId).collection('comments').add({
+                            username: username,
+                            name: name,
+                            text: newComment,
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                            commentNumber: newCommentNumber, // Thêm số thứ tự bình luận
+                        });
+
+                        // Xóa nội dung ô nhập bình luận
+                        document.getElementById('newComment').value = '';
+                        loadComments(); // Tải lại danh sách bình luận
+                    } else {
+                        alert("Không tìm thấy thông tin người dùng.");
+                    }
+                } catch (error) {
+                    console.error("Error submitting comment:", error);
+                }
+            } else {
+                alert("Bạn cần đăng nhập để bình luận.");
+            }
+        });
+    }
+}
+
+
+
+loadComments();
+
+function enableEditMode() {
+    const fields = [
+        { id: 'maDHGHTK', editable: true },
+        { id: 'deliveryname', editable: true, type: 'select', options: ['GHTK', 'Ahamove', 'Grab'] },
+        { id: 'issueType', editable: true, type: 'select', options: ['giao hàng', 'chuyển hàng'] },
+        { id: 'sendingStore', editable: true },
+        { id: 'receivingStore', editable: true },
+        { id: 'suCo', editable: true },
+        { id: 'solutionDirection', editable: true },
+        { id: 'compensationType', editable: true, type: 'select', options: ['ST tự xử lý', 'chốt đền nguyên kiện', 'chốt đền 20%', 'khác'] },
+        { id: 'compensationAmount', editable: true },
+        { id: 'SOthanhly', editable: true },
+        { id: 'RPOC', editable: true },
+        { id: 'status', editable: true, type: 'select', options: ['Đang xử lý', 'theo dõi', 'hoàn tất', 'hủy'] },
+        { id: 'note', editable: true },
+    ];
+
+    fields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (field.editable && element) {
+            const currentValue = element.textContent.trim();
+            if (field.type === 'select') {
+                const selectOptions = field.options
+                    .map(option => `<option value="${option}" ${option === currentValue ? 'selected' : ''}>${option}</option>`)
+                    .join('');
+                element.outerHTML = `<select id="${field.id}">${selectOptions}</select>`;
+            } else {
+                element.outerHTML = `<input type="text" id="${field.id}" value="${currentValue}">`;
+            }
+        }
+    });
+
+    document.getElementById('editButtons').style.display = 'block';
+    document.getElementById('editBtn').style.display = 'none';
+    toggleReceivingStore(document.getElementById('issueType').value);
+    toggleCompensationAmount(document.getElementById('compensationType').value);
+}
+
+// Định dạng số tiền khi nhập
+document.body.addEventListener('input', function (e) {
+    if (e.target.id === 'compensationAmount') {
+        e.target.value = e.target.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+});
+
+function toggleReceivingStore(issueType) {
+    const receivingStoreElement = document.getElementById('receivingStore');
+    const sendingStoreElement = document.getElementById('sendingStore'); // Thêm dòng này
+    if (issueType == 'chuyển hàng') {
+        sendingStoreElement.parentElement.style.display = 'block';
+        receivingStoreElement.parentElement.style.display = 'block';
+    } else {
+        receivingStoreElement.parentElement.style.display = 'none';
+        sendingStoreElement.parentElement.style.display = 'block';
+    }
+}
+
+
+function toggleCompensationAmount(compensationType) {
+    const compensationAmountElement = document.getElementById('compensationAmount');
+    const SOthanhlyElement = document.getElementById('SOthanhly');
+    const RPOCElement = document.getElementById('RPOC');
+
+    // Reset hiển thị mặc định
+    compensationAmountElement.parentElement.style.display = 'none';
+    SOthanhlyElement.parentElement.style.display = 'none';
+    RPOCElement.parentElement.style.display = 'none';
+
+    if (compensationType === 'chốt đền nguyên kiện') {
+        compensationAmountElement.parentElement.style.display = 'block';
+        // Hiển thị ô nhập mã SOthanhly
+        SOthanhlyElement.parentElement.style.display = 'block';
+    } else if (compensationType === 'chốt đền 20%') {
+        compensationAmountElement.parentElement.style.display = 'block';
+        // Hiển thị ô RPOC
+        RPOCElement.parentElement.style.display = 'block';
+    } else if (['khác'].includes(compensationType)) {
+        // Hiển thị ô nhập số tiền
+        compensationAmountElement.parentElement.style.display = 'block';
+    }
+}
+
+function saveTicketInfo() {
+    const updatedData = {};
+    const fields = [
+        'maDHGHTK', 'deliveryname', 'issueType', 'sendingStore',
+        'receivingStore', 'suCo', 'solutionDirection', 'SOthanhly', 'RPOC',
+        'compensationType', 'compensationAmount', 'status', 'note',
+    ];
+
+    fields.forEach(field => {
+        const inputElement = document.getElementById(field);
+        if (inputElement) {
+            const value = inputElement.value ? inputElement.value.trim() : '';
+            updatedData[field] = value;
+        }
+    });
+
+    // Thêm thời gian cập nhật hiện tại
+    updatedData.timeUpdate = new Date().toLocaleString('vi-VN', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+
+    // Kiểm tra nếu ticketId tồn tại và thực hiện cập nhật
+    db.collection('incidentReports').where("ticket", "==", ticketId).get()
+        .then(querySnapshot => {
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach(doc => {
+                    db.collection('incidentReports').doc(doc.id).update(updatedData)
+                        .then(() => {
+                            alert("Thông tin ticket đã được cập nhật thành công!");
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.error("Lỗi khi cập nhật ticket:", error);
+                            alert("Lỗi khi cập nhật ticket: " + error.message);
+                        });
+                });
+            } else {
+                alert("Không tìm thấy ticket với ID: " + ticketId);
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi khi truy vấn ticket:", error);
+            alert("Lỗi khi truy vấn ticket: " + error.message);
+        });
+}
+
+function cancelEdit() {
+    window.location.reload();
+}
+
+chỉnh lại toàn bộ code này để đúng giúp

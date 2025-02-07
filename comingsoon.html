@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sự cố XLTT cập nhật</title>
+    <link rel="stylesheet" href="style_index.css">
+    <link rel="icon" href="Logo_sc.png" type="image/png">
+</head>
+
+<body>
+    <div class="menu" id="menu">
+        <h3>Chào Mừng user</h3>
+        <a href="homepage.html">Trang chủ</a>
+        <a href="newticket.html">Tạo Ticket</a>
+        <a href="ticket-management.html">Quản Lý Sự Cố</a>
+        <a href="comingsoon.html">Sự cố XLTT cập nhật</a>
+        <a href="user-management.html">Quản Lý User</a>
+        <a href="money-management.html">Quản Lý Dòng Tiền</a>
+        <a href="form-xu-ly.html">Nghiệp vụ</a><br>
+        <button id="logout-button">Đăng xuất</button><br><br><br><br><br>
+        <p>Demo website ver 1.0.0 </p>
+        <p >Copyright @Thành Vĩnh </p>
+    </div>
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleMenu()"></button>
+
+    <div class="content" id="content">
+        <h1>Coming soon</h1>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            const toggleBtn = document.getElementById('toggle-btn');
+            const content = document.getElementById('content');
+
+            menu.classList.toggle('hidden');
+            content.classList.toggle('shifted');
+        }
+
+        // Xử lý tìm kiếm
+        document.getElementById('search-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const issueType = document.getElementById('issueType').value;
+            const status = document.getElementById('status').value;
+            const searchTerm = document.getElementById('searchTerm').value;
+
+            // Kiểm tra ngày tháng
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const timeDifference = end - start;
+                const dayDifference = timeDifference / (1000 * 3600 * 24); // Tính số ngày chênh lệch
+
+                if (dayDifference > 31) {
+                    alert('Vui lòng chọn ngày tìm kiếm trong vòng 1 tháng.');
+                    return; // Dừng hành động tìm kiếm
+                }
+            }
+
+            // Tiến hành tìm kiếm với các điều kiện đã nhập
+            searchIssues(startDate, endDate, issueType, status, searchTerm);
+        });
+
+        function searchIssues(startDate, endDate, issueType, status, searchTerm) {
+            const issues = [
+                { orderId: 'SO123', billId: 'GHTK456', ticketId: 'TICKET789', issueType: 'giao hàng', sendingStore: 'Store A', receivingStore: null, status: 'Đang xử lý', time: '2024-12-10' },
+                { orderId: 'SO124', billId: 'GHTK457', ticketId: 'TICKET790', issueType: 'chuyển hàng', sendingStore: 'Store B', receivingStore: 'Store D', status: 'Hoàn tất', time: '2024-12-11' },
+                { orderId: 'SO125', billId: 'GHTK458', ticketId: 'TICKET791', issueType: 'giao hàng', sendingStore: 'Store C', receivingStore: null, status: 'Theo dõi', time: '2024-12-12' },
+                { orderId: 'SO126', billId: 'GHTK458', ticketId: 'TICKET791', issueType: 'chuyển hàng', sendingStore: 'Store C', receivingStore: 'ST E', status: 'Theo dõi', time: '2024-11-29' },
+                { orderId: 'SO128', billId: 'GHTK458', ticketId: 'TICKET791', issueType: 'giao hàng', sendingStore: 'Store C', receivingStore: null, status: 'Hủy', time: '2024-12-12' },
+                // Thêm dữ liệu mẫu ở đây
+            ];
+
+            // Lọc các sự cố dựa trên tiêu chí
+            const filteredIssues = issues.filter(issue => {
+                const issueDate = new Date(issue.time);
+                const start = startDate ? new Date(startDate) : null;
+                const end = endDate ? new Date(endDate) : null;
+
+                return (
+                    (!start || issueDate >= start) &&
+                    (!end || issueDate <= end) &&
+                    (issueType === 'cả hai' || issue.issueType === issueType) &&
+                    (issue.status === status || !status) &&
+                    (issue.orderId.includes(searchTerm) || issue.billId.includes(searchTerm) || issue.ticketId.includes(searchTerm))
+                );
+            });
+
+            // Cập nhật bảng với kết quả tìm kiếm
+            const tableBody = document.getElementById('issue-table').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Xóa các dòng cũ
+
+            // Thêm số thứ tự vào từng dòng kết quả
+            filteredIssues.forEach((issue, index) => {
+                const row = tableBody.insertRow();
+
+                // Thêm số thứ tự vào ô đầu tiên
+                const cell = row.insertCell(0);
+                cell.textContent = index + 1; // Số thứ tự
+
+                // Thêm các ô dữ liệu khác
+                row.insertCell(1).textContent = issue.orderId;
+                row.insertCell(2).textContent = issue.billId;
+
+                // Tạo đường link cho ticketId
+                const ticketCell = row.insertCell(3);
+                const ticketLink = document.createElement('a');
+                ticketLink.href = `ticket-details.html?id=${issue.ticketId}`;  // Đường link dẫn đến trang chi tiết ticket
+                ticketLink.textContent = issue.ticketId;
+                ticketCell.appendChild(ticketLink);
+                row.insertCell(4).textContent = issue.issueType;
+                row.insertCell(5).textContent = issue.sendingStore;
+
+                // Cột ST Nhận: Nếu là "giao hàng" thì null, nếu là "chuyển hàng" thì ghi "Siêu Thị Nhận"
+                const receivingStore = issue.issueType === 'chuyển hàng' ? issue.receivingStore : '-';
+                row.insertCell(6).textContent = receivingStore;
+
+                row.insertCell(7).textContent = issue.status;
+                row.insertCell(8).textContent = issue.time;
+            });
+        }
+
+        function exportToExcel() {
+            // Code xuất dữ liệu bảng ra Excel sẽ được thêm ở đây
+            alert("Chức năng xuất Excel chưa được triển khai.");
+        }
+
+
+    </script>
+<script type="module" src="login_check.js"></script>
+</body>
+
+</html>

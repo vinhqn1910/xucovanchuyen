@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết ticket</title>
+    <link rel="stylesheet" href="style_user_detail.css">
+    <link rel="icon" href="Logo_sc.png" type="image/png">
+    <script src="ticket-detail.js" type="module"></script>
+</head>
+
+<body>
+    <div class="menu" id="menu">
+        <h3 id="welcome-message">Chào Mừng user</h3>
+        <a href="homepage.html" id="menu-homepage">Trang chủ</a>
+        <a href="newticket.html" id="menu-newticket">Tạo Ticket</a>
+        <a href="formsc.html" id="menu-formsc" target="_blank">Form nhập SC giao hàng</a>
+        <a href="ticket-management.html" id="menu-ticket-management">Quản Lý Sự Cố</a>
+        <a href="comingsoon.html" id="menu-comingsoon">Sự cố XLTT cập nhật</a>
+        <a href="user-management.html" id="menu-user-management">Quản Lý User</a>
+        <a href="money-management.html" id="menu-money-management">Quản Lý Dòng Tiền</a>
+        <a href="form-xu-ly.html" id="menu-form-xu-ly">Nghiệp vụ</a>
+        <a href="hoan-tien.html" id="menu-hoan-tien">Hoàn tiền</a><br>
+        <button id="logout-button">Đăng xuất</button><br><br><br><br><br>
+        <p>Copyright <br>@Dương Duy - Thành Vĩnh</p>
+    </div>
+    
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleMenu()"></button>
+    <div class="content" id="content">
+        <h1><strong>Chi Tiết Mã Ticket:</strong> <span id="ticket">Loading...</span></h1>
+        <div class="user-details">
+
+            <div class="ticket-details">
+                <p><strong>Thời gian tạo sự cố:</strong> <span id="thoiGianGui">Loading...</span></p>
+                <p><strong>User xử lý:</strong> <span id="username">Loading...</span></p>
+                <p><strong>Mã ĐH SO/CO:</strong> <span id="maSO">Loading...</span></p>
+                <p><strong>Mã bill đối tác:</strong> <span id="maDHGHTK">Loading...</span></p>
+                <p><strong>Đối tác giao:</strong> <span id="deliveryname">Loading...</span></p>
+                <p><strong>Hình thức giao:</strong> <span id="issueType">Loading...</span></p>
+                <p><strong>Siêu thị gửi hàng: </strong><span id="sendingStore"></span></p>
+                <p><strong>Siêu thị nhận hàng: </strong><span id="receivingStore"></span></p>
+                <p><strong>User báo sự cố:</strong> <span id="userbaocao"></span></p>
+                <p><strong>Nội dung sự cố:</strong> <span id="suCo"></span></p>
+                <p><strong>Hướng xử lý:</strong> <span id="solutionDirection"></span></p>
+                <p><strong>Hình thức xử lý:</strong> <span id="compensationType"></span></p>
+                <p><strong>Số tiền chốt:</strong> <span id="compensationAmount"></span></p>
+                <p><strong>Mã ĐH thanh lý:</strong> <span id="SOthanhly"></span></p>
+                <p><strong>KTCN:</strong> <span id="KTCN"></span></p>
+                <p><strong>Link chốt đền:</strong> <span id="linkchotden"></span></p>
+                <p><strong>Code sản phẩm:</strong> <span id="codesp"></span></p>
+                <p><strong>Imei sản phẩm:</strong> <span id="imei"></span></p>
+                <p><strong>Trạng thái chuyển đổi:</strong> <span id="trangthai"></span></p>
+                <p><strong>Trạng Thái:</strong> <span id="status">Loading...</span></p>
+                <p><strong>Note:</strong> <span id="note"></span></p>
+                <p><strong>Trạng thái xử lý với NVC:</strong> <span id="statusNVC"></span></p>
+                <p><strong>Mã chuyển đổi trạng thái(OC/RP):</strong> <span id="RPOC"></span></p>
+            </div>
+
+            <div id="editButtons" style="display:none;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button id="saveBtn">Lưu</button>
+                    <button id="cancelBtn">Hủy</button>
+                </div>
+
+            </div>
+            <button id="editBtn">Chỉnh Sửa</button>
+
+            <p id="chuyenHang" style="display: flex; flex-direction: row; gap: 10px;">
+                <button id="createCompensationInfoBtn">CK: Chốt đền chênh lệch</button>
+                <button id="createCompensationNKInfoBtn">CK: Chốt đền nguyên kiện</button>
+            </p>
+            
+            <p id="giaoHang" style="display: flex; flex-direction: row; gap: 10px;">
+                <button id="SOcreateCompensationInfoBtn">GH: Chốt đền chênh lệch</button>
+                <button id="SOcreateCompensationNKInfoBtn">GH: Chốt đền nguyên kiện</button>
+            </p>
+            
+            <!-- Add button to create compensation info -->
+
+            <!-- Section to display the generated compensation report -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="copyButton">Copy</button>
+                <button id="toggleButton">Ẩn/Hiện</button>
+            </div>
+            <div id="compensationReport" class="report-section" style="display: none;"></div>
+            
+            <!-- Thêm phần bình luận ở đây -->
+            <div class="comment-section">
+                <h2>Bình luận</h2>
+
+                <!-- Các bình luận sẽ được hiển thị ở đây -->
+            </div>
+            <textarea id="newComment" placeholder="Nhập bình luận mới..." rows="4" cols="50"></textarea>
+            <button id="submitCommentBtn">Gửi Bình Luận</button>
+            <div id="commentsList">
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js"></script>
+
+    <script type="module" src="ticket-detail.js"></script>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            const toggleBtn = document.getElementById('toggle-btn');
+            const content = document.getElementById('content');
+
+            menu.classList.toggle('hidden');
+            content.classList.toggle('shifted');
+        }
+
+        // Load bình luận khi trang được tải
+
+    </script>
+    <script type="module" src="login_check.js"></script>
+</body>
+
+</html>

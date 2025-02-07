@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sự Cố Giao hàng</title>
+  <link rel="icon" href="Logo_sc.png" type="image/png">
+  <link rel="stylesheet" href="style-sc.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <div class="form-container">
+    <h1>Báo cáo sự cố giao hàng</h1>
+    <form id="incidentForm">
+      <p>Copyright @Dương Duy - Thành Vĩnh</p>
+      <p>version 1.0.0</p>
+      <label for="maSO">Mã SO:</label>
+      <input type="text" id="maSO" name="maSO" placeholder="Nhập mã SO" required autocomplete="off">
+      <p>Lưu ý: nhập SO in hoa, ví dụ: 00006SO24120865918</p>
+
+      <label for="maDHGHTK">Mã ĐH GHTK/GRAB/AHAMOVE:</label>
+      <input type="text" id="maDHGHTK" name="maDHGHTK" required placeholder="Nhập mã ĐH GHTK/GRAB/AHAMOVE" 
+        autocomplete="off">
+
+      <label for="deliveryname">Nhà vận chuyển</label>
+      <select id="deliveryname" name="deliveryname">
+        <option value="GHTK">GHTK</option>
+        <option value="ahamove">Ahamove</option>
+        <option value="grab">Grab</option>
+        <option value="crossborder">Giao hàng cross border</option>
+      </select>
+
+      <label for="suCo">Sự cố:</label>
+      <input type="text" id="suCo" name="suCo" placeholder="Mô tả sự cố" required autocomplete="off">
+
+      <label for="userbaocao">User báo sự cố:</label>
+      <input type="text" id="userbaocao" name="userbaocao" required placeholder="Tên user" >
+
+      <label for="compensationAmount" id="compensationAmount-label"">Số Tiền Đền</label>
+      <input type="text" id="compensationAmount" name="compensationAmount" placeholder="Số tiền đền" oninput="formatCurrency(this)" autocomplete="off">
+
+      <label for="note">Thông tin thêm:</label>
+      <textarea id="note" name="note" placeholder="Nhập thông tin thêm"></textarea>
+
+      <label for="thoiGian">Thời gian hẹn phản hồi:</label>
+      <input type="datetime-local" id="thoiGian" name="thoiGian" >
+
+      <button type="submit">Gửi thông tin</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+<script>
+          // XỬ LÝ DẤU PHẨY KHI NHẬP VÀO Ô CHỐT ĐỀN
+          function formatCurrency(input) {
+            // Lấy giá trị của input
+            let value = input.value;
+
+            // Xóa tất cả các ký tự không phải là số
+            value = value.replace(/[^\d]/g, '');
+
+            // Định dạng lại số và thêm dấu phẩy
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            // Cập nhật lại giá trị cho input
+            input.value = value;
+        }
+</script>
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore-compat.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Người Dùng</title>
+    <link rel="stylesheet" href="style_user_detail.css">
+    <link rel="icon" href="Logo_sc.png" type="image/png">
+</head>
+
+<body>
+    <div class="menu" id="menu">
+        <h3 id="welcome-message">Chào Mừng user</h3>
+        <a href="homepage.html" id="menu-homepage">Trang chủ</a>
+        <a href="newticket.html" id="menu-newticket">Tạo Ticket</a>
+        <a href="formsc.html" id="menu-formsc" target="_blank">Form nhập SC giao hàng</a>
+        <a href="ticket-management.html" id="menu-ticket-management">Quản Lý Sự Cố</a>
+        <a href="comingsoon.html" id="menu-comingsoon">Sự cố XLTT cập nhật</a>
+        <a href="user-management.html" id="menu-user-management">Quản Lý User</a>
+        <a href="money-management.html" id="menu-money-management">Quản Lý Dòng Tiền</a>
+        <a href="form-xu-ly.html" id="menu-form-xu-ly">Nghiệp vụ</a>
+        <a href="hoan-tien.html" id="menu-hoan-tien">Hoàn tiền</a><br>
+        <button id="logout-button">Đăng xuất</button><br><br><br><br><br>
+        <p>Copyright <br>@Dương Duy - Thành Vĩnh</p>
+    </div>
+    
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleMenu()"></button>
+
+    <div class="content" id="content">
+        <h1>Chi Tiết Người Dùng</h1>
+        <div class="user-details">
+            <h2>Thông Tin User</h2>
+            <div class="details">
+                <p><strong>Thời gian tạo:</strong> <span id="createdAt">Loading...</span></p>
+                <p><strong>Tên Nhân Viên:</strong> <span id="name">Loading...</span></p>
+                <p><strong>User:</strong> <span id="username">Loading...</span></p>
+                <p><strong>Số Điện Thoại:</strong> <span id="phone">Loading...</span></p>
+                <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+                <p><strong>Vai Trò:</strong> <span id="role">Loading...</span></p>
+                <p><strong>Trạng Thái:</strong> <span id="status">Loading...</span></p>
+            </div>
+
+            <!-- Chỉnh sửa nút và các nút lưu, hủy sẽ được hiển thị dưới đây -->
+            <div id="editButtons" style="display:none;">
+                <button id="saveBtn">Cập nhật</button>
+                <button id="cancelBtn">Hủy</button>
+            </div>
+
+            <button id="editBtn">Chỉnh Sửa</button>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js"></script>
+    <script type="module" src="user-detail.js"></script>
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            const toggleBtn = document.getElementById('toggle-btn');
+            const content = document.getElementById('content');
+
+            menu.classList.toggle('hidden');
+            content.classList.toggle('shifted');
+        }
+    </script>
+    <script type="module" src="login_check.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý User</title>
+    <link rel="stylesheet" href="style_index.css">
+    <link rel="icon" href="Logo_sc.png" type="image/png">
+</head>
+
+<body>
+    <div class="menu" id="menu">
+        <h3 id="welcome-message">Chào Mừng user</h3>
+        <a href="homepage.html" id="menu-homepage">Trang chủ</a>
+        <a href="newticket.html" id="menu-newticket">Tạo Ticket</a>
+        <a href="formsc.html" id="menu-formsc" target="_blank">Form nhập SC giao hàng</a>
+        <a href="ticket-management.html" id="menu-ticket-management">Quản Lý Sự Cố</a>
+        <a href="comingsoon.html" id="menu-comingsoon">Sự cố XLTT cập nhật</a>
+        <a href="user-management.html" id="menu-user-management">Quản Lý User</a>
+        <a href="money-management.html" id="menu-money-management">Quản Lý Dòng Tiền</a>
+        <a href="form-xu-ly.html" id="menu-form-xu-ly">Nghiệp vụ</a>
+        <a href="hoan-tien.html" id="menu-hoan-tien">Hoàn tiền</a><br>
+        <button id="logout-button">Đăng xuất</button><br><br><br><br><br>
+        <p>Copyright <br>@Dương Duy - Thành Vĩnh</p>
+    </div>
+    
+    
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleMenu()"></button>
+
+    <div class="content" id="content">
+        <h1>Quản Lý User</h1>
+
+        <!-- Form tìm kiếm -->
+        <form id="search-form">
+            <div class="form-row">
+                <label for="statusUser">Tình trạng User</label>
+                <select id="statusUser" name="statusUser">
+                    <option value="Đang hoạt động">Đang hoạt động</option>
+                    <option value="Không hoạt động">Không hoạt động</option>
+                    <option value="Cả hai">Cả hai</option>
+                </select>
+
+                <label for="searchBy">Tìm kiếm theo</label>
+                <select id="searchBy" name="searchBy">
+                    <option value="username">User</option>
+                    <option value="phone">Số điện thoại</option>
+                    <option value="email">Email</option>
+                </select>
+
+                <label for="searchTerm">Tìm Kiếm</label>
+                <input type="text" id="searchTerm" name="searchTerm" placeholder="Nhập User, SĐT, email">
+                <button type="button" id="searchBtn">Tìm Kiếm</button>
+
+                <button type="button" id="createUserBtn">Tạo User mới</button>
+            </div>
+        </form>
+
+        <!-- Popup tạo user mới -->
+        <div id="userPopup" class="popup">
+            <div class="container">
+                <h2>Tạo Tài Khoản Nhân Viên</h2>
+                <form id="create-account-form">
+                    <label for="name">Tên nhân viên</label>
+                    <input type="text" id="name" placeholder="Tên nhân viên" required>
+                    <label for="username">User</label>
+                    <input type="text" id="username" placeholder="User" required>
+                    <label for="phone">Điện thoại</label>
+                    <input type="text" id="phone" placeholder="Số điện thoại" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Email" required>
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Mật khẩu" required>
+                    <label for="role">Quyền User</label>
+                    <select id="role">
+                        <option value="Nhân viên">Nhân viên</option>
+                        <option value="admin">Admin</option>
+                    </select><br>
+                    <button type="submit">Tạo Tài Khoản</button>
+                </form>
+                <!-- Nút đóng popup -->
+                <button id="closePopupBtn" type="button">Đóng</button>
+                <p id="message"></p>
+            </div>
+        </div>
+
+        <!-- Hiển thị thông báo lỗi thành công -->
+        <div id="message"></div>
+
+        <!-- Bảng hiển thị kết quả -->
+        <table id="issue-table">
+            <thead>
+                <tr>
+                    <th>Số TT</th>
+                    <th>User</th>
+                    <th>Tên</th>
+                    <th>SĐT</th>
+                    <th>Email</th>
+                    <th>Trạng thái User</th>
+                    <th>Trạng thái online</th>
+                    <th>Quyền User</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Các dòng kết quả sẽ được thêm vào đây bằng JavaScript -->
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const createUserBtn = document.getElementById("createUserBtn");
+        const userPopup = document.getElementById("userPopup");
+        const closePopupBtn = document.getElementById("closePopupBtn");
+
+        // Hiển thị popup
+        createUserBtn.addEventListener("click", () => {
+            userPopup.style.display = "block";
+        });
+
+        // Đóng popup
+        closePopupBtn.addEventListener("click", () => {
+            userPopup.style.display = "none";
+        });
+    });
+
+    function toggleMenu() {
+        const menu = document.getElementById('menu');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const content = document.getElementById('content');
+
+        menu.classList.toggle('hidden');
+        content.classList.toggle('shifted');
+    }
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore-compat.js"></script>
+
+<!-- Custom JS -->
+<script type="module" src="firebase-config.js"></script>
+
+<!-- Trong file HTML, thêm type="module" -->
+<script type="module" src="user-management.js"></script>
+<script type="module" src="creat-user.js"></script>
+<script type="module" src="login_check.js"></script>
+
+
+</html>

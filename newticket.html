@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Phiếu Sự Cố new</title>
+    <link rel="stylesheet" href="style_index.css">
+    <link rel="icon" href="Logo_sc.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <div class="menu" id="menu">
+        <h3 id="welcome-message">Chào Mừng user</h3>
+        <a href="homepage.html" id="menu-homepage">Trang chủ</a>
+        <a href="newticket.html" id="menu-newticket">Tạo Ticket</a>
+        <a href="formsc.html" id="menu-formsc" target="_blank">Form nhập SC giao hàng</a>
+        <a href="ticket-management.html" id="menu-ticket-management">Quản Lý Sự Cố</a>
+        <a href="comingsoon.html" id="menu-comingsoon">Sự cố XLTT cập nhật</a>
+        <a href="user-management.html" id="menu-user-management">Quản Lý User</a>
+        <a href="money-management.html" id="menu-money-management">Quản Lý Dòng Tiền</a>
+        <a href="form-xu-ly.html" id="menu-form-xu-ly">Nghiệp vụ</a>
+        <a href="hoan-tien.html" id="menu-hoan-tien">Hoàn tiền</a><br>
+        <button id="logout-button">Đăng xuất</button><br><br><br><br><br>
+        <p>Copyright <br>@Dương Duy - Thành Vĩnh</p>
+    </div>
+    
+    
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleMenu()"></button>
+
+    <div class="content" id="content">
+        <h1>Tạo Phiếu Sự Cố new</h1>
+        <h2>
+            <form id="incidentForm">
+                <label for="maSO">Mã Đơn Hàng (ĐH SO/CO hoặc CRM):</label>
+                <input type="text" id="maSO" name="maSO" required autocomplete="off">
+
+                <label for="maDHGHTK">Mã ĐH GHTK/GRAB/AHAMOVE:</label>
+                <input type="text" id="maDHGHTK" name="maDHGHTK" required autocomplete="off">
+
+                <label for="deliveryname">Nhà vận chuyển</label>
+                <select id="deliveryname" name="deliveryname">
+                    <option value="GHTK">GHTK</option>
+                    <option value="ahamove">Ahamove</option>
+                    <option value="grab">Grab</option>
+                </select>
+
+                <label for="issueType">Loại Sự Cố</label>
+                <select id="issueType" name="issueType">
+                    <option value="giao hàng">Giao hàng</option>
+                    <option value="chuyển hàng">Chuyển hàng</option>
+                    <option value="crossborder">Giao hàng cross border</option>
+                </select>
+
+                <label for="sendingStore">Siêu Thị Gửi Hàng</label>
+                <input type="text" id="sendingStore" name="sendingStore" required autocomplete="off">
+
+                <label for="receivingStore" id="receivingStore-label" style="display:none;">Siêu Thị Nhận Hàng</label>
+                <input type="text" id="receivingStore" name="receivingStore" style="display:none;" autocomplete="off">
+
+                <label for="suCo">Nội dung sự cố:</label>
+                <input type="text" id="suCo" name="suCo" placeholder="Mô tả sự cố" required autocomplete="off">
+
+                <label for="solutionDirection">Hướng Xử Lý</label>
+                <textarea id="solutionDirection" name="solutionDirection" required></textarea>
+
+                <label for="compensationType">Hình Thức Xử Lý</label>
+                <select id="compensationType" name="compensationType">
+                    <option value="ST tự xử lý">Chọn hình thức</option>
+                    <option value="chốt đền nguyên kiện">Chốt đền nguyên kiện</option>
+                    <option value="chốt đền 20%">Chốt đền 20%</option>
+                    <option value="ST tự xử lý">ST tự xử lý</option>
+                    <option value="Khác">Khác</option>
+                </select>
+
+                <label for="compensationAmount" id="compensationAmount-label" style="display:none;">Số Tiền Đền</label>
+                <input type="text" id="compensationAmount" name="compensationAmount" style="display:none;" oninput="formatCurrency(this)" autocomplete="off">
+
+                <label for="note">Ghi Chú</label>
+                <textarea id="note" name="note" autocomplete="off"></textarea>
+
+                <label for="status">Trạng Thái</label>
+                <select id="status" name="status">
+                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option value="hoàn tất">Hoàn tất</option>
+                    <option value="theo dõi">Theo dõi</option>
+                    <option value="hủy">Huỷ</option>
+                </select>
+
+                <label for="followUpTime" id="followUpTime-label" style="display:none;">Thời Gian Theo Dõi</label>
+                <input type="datetime-local" id="followUpTime" name="followUpTime" style="display:none;">
+
+                <br><button type="submit">Tạo Phiếu Sự Cố</button>
+            </form>
+        </h2>
+    </div>
+
+    <div class="sticky-note">
+        <h3>Lưu ý</h3>
+        <h4>Form này dùng để cập nhật sự cố của chính mình!, bạn có thể note tạm thông tin bên dưới, lưu ý khi tải lại trang sẽ mất ghi chú này.</h4>
+        <textarea placeholder="Viết ghi chú ở đây..."></textarea>
+    </div>
+    
+
+    <script type="module" src="script_ticket.js"></script>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore-compat.js"></script>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            const toggleBtn = document.getElementById('toggle-btn');
+            const content = document.getElementById('content');
+
+            menu.classList.toggle('hidden');
+            content.classList.toggle('shifted');
+        }
+
+        // Hiển thị/hide trường Siêu Thị Nhận tùy thuộc vào Loại Sự Cố
+        document.getElementById('issueType').addEventListener('change', function () {
+            const receivingStoreLabel = document.getElementById('receivingStore-label');
+            const receivingStoreInput = document.getElementById('receivingStore');
+            if (this.value === 'chuyển hàng') {
+                receivingStoreLabel.style.display = 'block';
+                receivingStoreInput.style.display = 'block';
+            } else {
+                receivingStoreLabel.style.display = 'none';
+                receivingStoreInput.style.display = 'none';
+            }
+        });
+
+        // Hiển thị/hide trường số tiền tùy thuộc vào hình thức xử lý
+        document.getElementById('compensationType').addEventListener('change', function () {
+            const compensationLabel = document.getElementById('compensationAmount-label');
+            const compensationInput = document.getElementById('compensationAmount');
+            if (this.value === 'chốt đền nguyên kiện' || this.value === 'chốt đền 20%' || this.value === 'Khác') {
+                compensationLabel.style.display = 'block';
+                compensationInput.style.display = 'block';
+            } else {
+                compensationLabel.style.display = 'none';
+                compensationInput.style.display = 'none';
+            }
+        });
+
+
+        // Hiển thị/hide trường thời gian theo dõi khi chọn trường theo dõi
+        document.getElementById('status').addEventListener('change', function () {
+            const followUpTimeLabel = document.getElementById('followUpTime-label');
+            const followUpTimeInput = document.getElementById('followUpTime');
+
+            if (this.value === 'Theo dõi') {
+                followUpTimeLabel.style.display = 'block';
+                followUpTimeInput.style.display = 'block';
+            } else {
+                followUpTimeLabel.style.display = 'none';
+                followUpTimeInput.style.display = 'none';
+            }
+        });
+
+        // XỬ LÝ DẤU PHẨY KHI NHẬP VÀO Ô CHỐT ĐỀN
+        function formatCurrency(input) {
+            // Lấy giá trị của input
+            let value = input.value;
+
+            // Xóa tất cả các ký tự không phải là số
+            value = value.replace(/[^\d]/g, '');
+
+            // Định dạng lại số và thêm dấu phẩy
+            value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            // Cập nhật lại giá trị cho input
+            input.value = value;
+        }
+
+    </script>
+      <script type="module" src="login_check.js"></script>
+</body>
+
+</html>

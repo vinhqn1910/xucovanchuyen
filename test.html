@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý dữ liệu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    table th {
+      background-color: #f4f4f4;
+    }
+
+    .table-container {
+      margin-bottom: 30px;
+    }
+
+    .add-row {
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 8px 12px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Quản lý dữ liệu</h1>
+
+  <div class="table-container">
+    <h2>Bảng 1: Số lượng sự cố</h2>
+    <table id="incident-table">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tên sự cố</th>
+          <th>Số lượng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Lỗi hệ thống</td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Mất kết nối</td>
+          <td>3</td>
+        </tr>
+      </tbody>
+    </table>
+    <button onclick="addIncidentRow()">Thêm dòng mới</button>
+  </div>
+
+  <div class="table-container">
+    <h2>Bảng 2: Dòng tiền</h2>
+    <table id="finance-table">
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tháng</th>
+          <th>Dòng tiền (VNĐ)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Tháng 1</td>
+          <td>10,000,000</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Tháng 2</td>
+          <td>15,000,000</td>
+        </tr>
+      </tbody>
+    </table>
+    <button onclick="addFinanceRow()">Thêm dòng mới</button>
+  </div>
+
+  <script>
+    // Thêm dòng mới vào bảng Số lượng sự cố
+    function addIncidentRow() {
+      const table = document.getElementById("incident-table").getElementsByTagName("tbody")[0];
+      const rowCount = table.rows.length + 1;
+      const newRow = table.insertRow();
+
+      newRow.innerHTML = `
+        <td>${rowCount}</td>
+        <td><input type="text" placeholder="Tên sự cố"></td>
+        <td><input type="number" placeholder="Số lượng"></td>
+      `;
+    }
+
+    // Thêm dòng mới vào bảng Dòng tiền
+    function addFinanceRow() {
+      const table = document.getElementById("finance-table").getElementsByTagName("tbody")[0];
+      const rowCount = table.rows.length + 1;
+      const newRow = table.insertRow();
+
+      newRow.innerHTML = `
+        <td>${rowCount}</td>
+        <td><input type="text" placeholder="Tháng"></td>
+        <td><input type="text" placeholder="Dòng tiền (VNĐ)"></td>
+      `;
+    }
+  </script>
+</body>
+</html>
