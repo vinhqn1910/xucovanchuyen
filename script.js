@@ -78,7 +78,7 @@ form.addEventListener('submit', async (e) => {
     if (exists) {
       Swal.fire({
         title: `Cập nhật trùng TICKET: #${existingTicket}`,
-        text: 'Vui lòng liên hệ để chỉnh sửa.',
+        text: 'Vui lòng liên hệ 18231 - Duy, 234383 - Vĩnh, 178377 - Nhung, 28937 - Hẹn để chỉnh sửa thông tin.',
         icon: 'warning',
         confirmButtonText: 'OK'
       });
