@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
 import { 
-    getFirestore, collection, doc, setDoc, getDocs, getDoc, updateDoc, addDoc 
+    getFirestore, collection, doc, setDoc, getDocs, getDoc, updateDoc 
 } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
@@ -30,6 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
         window.postsLoaded = true;
     }
 });
+
+// Hàm giải mã ký tự HTML (Fix lỗi `&gt;`)
+function decodeEntities(encodedString) {
+    let textArea = document.createElement("textarea");
+    textArea.innerHTML = encodedString;
+    return textArea.value;
+}
 
 // Lưu bài viết
 document.getElementById("savePostBtn").addEventListener("click", async () => {
@@ -84,13 +91,51 @@ async function loadPosts() {
                 <span class="post-time">${post.timestamp}</span>
             </div>
             <h3 class="post-title">${post.title}</h3>
-            <div class="post-content">${post.content}</div>
-            <button class="edit-btn" data-title="${post.title}">Chỉnh sửa</button>
+            <div class="post-content">${decodeEntities(post.content)}</div>
             <button class="copy-btn" data-content="${post.content}">Copy</button>
+            <button class="edit-btn" data-title="${post.title}">Chỉnh sửa</button>
         `;
         postList.prepend(postElement);
     });
 }
+
+// Hàm giải mã HTML entities (&gt;, &nbsp;, &amp;, ...)
+function decodeHTMLEntities(text) {
+    let textarea = document.createElement("textarea");
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+
+// Xử lý sự kiện "Copy"
+document.getElementById("postList").addEventListener("click", async (e) => {
+    if (e.target.classList.contains("copy-btn")) {
+        let contentHTML = e.target.getAttribute("data-content");
+
+        // Tạo thẻ tạm để xử lý nội dung
+        let tempElement = document.createElement("div");
+        tempElement.innerHTML = contentHTML;
+
+        // Chuyển đổi HTML thành text và xử lý khoảng cách
+        let plainText = tempElement.innerHTML
+            .replace(/<br\s*\/?>/gi, "\n")   // Thay <br> bằng xuống dòng
+            .replace(/<\/p>\s*<p>/gi, "\n") // Thay </p><p> bằng 1 lần xuống dòng
+            .replace(/<\/?[^>]+(>|$)/g, "") // Xóa tất cả thẻ HTML còn lại
+            .replace(/\n{2,}/g, "\n");      // Xóa khoảng cách thừa
+
+        // Giải mã ký tự HTML (&gt; -> >, &nbsp; -> " ", v.v.)
+        plainText = decodeHTMLEntities(plainText);
+
+        try {
+            await navigator.clipboard.writeText(plainText);
+            alert("Đã sao chép nội dung với định dạng chuẩn!");
+        } catch (err) {
+            console.error("Lỗi khi sao chép:", err);
+            alert("Không thể sao chép nội dung!");
+        }
+    }
+});
+
+
 
 // Xử lý sự kiện chỉnh sửa bài viết
 document.getElementById("postList").addEventListener("click", async (e) => {
@@ -101,7 +146,7 @@ document.getElementById("postList").addEventListener("click", async (e) => {
         if (postDoc.exists()) {
             let postData = postDoc.data();
             document.getElementById("postTitle").value = postData.title;
-            quill.root.innerHTML = postData.content;
+            quill.root.innerHTML = decodeEntities(postData.content);
             document.getElementById("savePostBtn").innerText = "Cập nhật bài viết";
 
             let cancelBtn = document.createElement("button");
@@ -157,28 +202,3 @@ document.getElementById("postList").addEventListener("click", async (e) => {
         }
     }
 });
-
-// Xử lý sự kiện copy nội dung bài viết
-document.getElementById("postList").addEventListener("click", async (e) => {
-    if (e.target.classList.contains("copy-btn")) {
-        let content = e.target.getAttribute("data-content");
-        copyToClipboard(content);
-    }
-});
-
-// Hàm sao chép nội dung vào clipboard
-async function copyToClipboard(htmlContent) {
-    try {
-        await navigator.clipboard.write([
-            new ClipboardItem({
-                "text/html": new Blob([htmlContent], { type: "text/html" }),
-                "text/plain": new Blob([htmlContent], { type: "text/plain" }),
-            }),
-        ]);
-        alert("Đã sao chép nội dung với định dạng HTML!");
-    } catch (err) {
-        console.error("Lỗi khi sao chép:", err);
-        alert("Không thể sao chép nội dung!");
-    }
-}
-
