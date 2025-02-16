@@ -50,7 +50,7 @@ onAuthStateChanged(auth, async (user) => {
     } catch (error) {
       console.error("Error updating user status:", error);
     }
-    window.location.href = "homepage.html"; // Chuyển hướng đến trang đăng nhập
+    window.location.href = "/homepage.html"; // Chuyển hướng đến trang đăng nhập
   } else {
     console.log("No user is logged in");
     // Khi không đăng nhập, hiển thị form đăng nhập
@@ -115,4 +115,28 @@ logoutBtn.addEventListener("click", async () => {
     .catch((error) => {
       console.error("Logout failed:", error.message);
     });
+});
+
+window.addEventListener("beforeunload", async () => {
+  const user = auth.currentUser;
+  if (user) {
+    try {
+      // Cập nhật trạng thái offline trong Firestore
+      const usersRef = collection(db, "employees");
+      const q = query(usersRef, where("userId", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userRef = doc(db, "employees", userDoc.id);
+        await updateDoc(userRef, { status: "offline" });
+      }
+      
+      // Đăng xuất Firebase Auth
+      await signOut(auth);
+      localStorage.setItem("userLoggedIn", "false");
+    } catch (error) {
+      console.error("Error logging out on window close:", error);
+    }
+  }
 });

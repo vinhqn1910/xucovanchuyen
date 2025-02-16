@@ -1,0 +1,243 @@
+/* Định dạng chung */
+body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin: 0;
+
+}
+
+.menu {
+    position: fixed;
+    /* Giữ menu cố định khi cuộn */
+    width: 250px;
+    background-color: #333;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu.hidden {
+    position: fixed;
+    /* Giữ menu cố định khi cuộn */
+    transform: translateX(-250px);
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 0;
+    border-bottom: 1px solid #555;
+}
+
+.menu a:hover {
+    background-color: #555;
+    padding-left: 10px;
+    transition: padding-left 0.2s ease;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    padding: 20px;
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 5px;
+    font-size: 50px;
+    font-style: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 0px 135px;
+    font-size: 20px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.content.shifted {
+    margin-left: 0;
+
+}
+
+.toggle-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    transition: left 0.3s ease;
+    position: fixed;
+    /* Giữ menu cố định khi cuộn */
+}
+
+.menu.hidden~.toggle-btn {
+    left: 0px;
+}
+
+.toggle-btn::before {
+    content: "\2630";
+    /* Unicode for hamburger icon */
+    font-size: 18px;
+    position: fixed;
+    /* Giữ menu cố định khi cuộn */
+}
+
+/* Chỉnh container soạn thảo */
+#editor-container {
+    background: #f3f3f3;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Chỉnh ô nhập tiêu đề */
+#postTitle {
+    width: 98.5%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+/* Nút Đăng bài / Cập nhật bài viết */
+#savePostBtn {
+    margin-top: 10px;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+#savePostBtn:hover {
+    background: #0056b3;
+}
+
+/* Nút Hủy */
+.cancel-btn {
+    background: red;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background 0.3s;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-style: italic;
+}
+
+.cancel-btn:hover {
+    background: darkred;
+}
+
+/* Chỉnh các bài viết */
+.post {
+    background: #e0e0e0;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Meta thông tin bài viết */
+.post .meta {
+    font-size: 12px;
+    color: rgb(207, 206, 206);
+}
+
+.post-title {
+    font-size: 24px;
+    color: darkblue;
+    font-weight: bold;
+}
+
+.post-content {
+    font-size: 18px;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Định dạng thời gian và tác giả */
+.post-time, .tac-gia {
+    font-style: italic;
+    color: black;
+    font-size: medium;
+}
+
+/* Nút Chỉnh sửa */
+.edit-btn {
+    background: #ffc107;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.edit-btn:hover {
+    background: #d39e00;
+}
+
+/* Màu chữ xanh cho tên người dùng */
+.blue-text {
+    color: rgba(6, 95, 197, 0.699);
+    font-weight: bold;
+}
+
+/* Chỉnh khung trình soạn thảo */
+#editor {
+    font-size: 18px;
+    color: #444;
+    background: #f9f9f9;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    min-height: 20px;
+    transition: border-color 0.3s;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+/* Khi người dùng focus vào trình soạn thảo */
+#editor:focus, #postTitle:focus {
+    border-color: #007bff;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+button:hover {
+    background-color: #dae7da;
+    color: rgb(0, 0, 0);
+}

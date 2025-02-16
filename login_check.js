@@ -154,14 +154,40 @@ document.getElementById("logout-button").addEventListener("click", async () => {
 
 // Lắng nghe sự kiện tắt trình duyệt hoặc tab
 window.addEventListener("beforeunload", async () => {
-  if (auth.currentUser) {
+  console.log("Trình duyệt đang đóng!"); // Kiểm tra xem có chạy không
+
+  const user = auth.currentUser;
+  if (user) {
     try {
-      await updateDoc(doc(db, "employees", auth.currentUser.uid), {
-        status: "offline",
-        lastActive: Timestamp.now(),
-      });
+      const usersRef = collection(db, "employees");
+      const q = query(usersRef, where("userId", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userRef = doc(db, "employees", userDoc.id);
+
+        // Cập nhật trạng thái thành offline
+        await updateDoc(userRef, {
+          status: "offline",
+          lastActive: Timestamp.now(),
+        });
+
+        console.log("Cập nhật trạng thái offline thành công!");
+      }
+
+      // Đăng xuất Firebase Auth
+      await signOut(auth);
+      console.log("Đã đăng xuất Firebase!");
+
+      // Xóa thông tin đăng nhập trong localStorage
+      localStorage.removeItem("userRole");
+      localStorage.removeItem("username");
+      localStorage.removeItem("name");
+      console.log("Xóa localStorage thành công!");
+
     } catch (error) {
-      console.error("Error updating status during browser close:", error);
+      console.error("Lỗi khi cập nhật trạng thái:", error);
     }
   }
 });

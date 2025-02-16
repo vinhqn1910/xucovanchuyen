@@ -1,7 +1,7 @@
 // Import Firebase modules from SDK
 import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { collection, query, where, getDocs, doc, updateDoc, addDoc, orderBy, limit, getFirestore, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, orderBy, limit, getFirestore, serverTimestamp, setDoc, Timestamp  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // Firebase initialization
 const firestore = getFirestore();
@@ -319,6 +319,7 @@ function toggleCompensationAmount(compensationType) {
 }
 
 
+
 // Save ticket info
 const saveTicketInfo = async () => {
     const updatedData = {};
@@ -336,24 +337,70 @@ const saveTicketInfo = async () => {
         }
     });
 
-    updatedData.timeUpdate = new Date().toLocaleString('vi-VN');
+    // Lấy thời gian hiện tại và định dạng ddmmyyyy_hhmm
+    const now = new Date();
+    const formattedDate = now.toLocaleString("vi-VN", { 
+        day: "2-digit", 
+        month: "2-digit", 
+        year: "numeric", 
+        hour: "2-digit", 
+        minute: "2-digit", 
+        hour12: false 
+    }).replace(/\//g, ":").replace(" ", "_").replace(":", "h");
 
-    try {
-        const ticketsQuery = query(collection(firestore, "incidentReports"), where("ticket", "==", ticketId));
-        const querySnapshot = await getDocs(ticketsQuery);
+    // Tạo ID cho document: ticketId_ddmmyyyy_hhmm
+    const logId = `${ticketId}_${formattedDate}`;
 
-        if (!querySnapshot.empty) {
-            const ticketDoc = querySnapshot.docs[0];
-            await updateDoc(doc(firestore, "incidentReports", ticketDoc.id), updatedData);
-            alert("Thông tin ticket đã được cập nhật thành công!");
-            window.location.reload();
+    updatedData.timeUpdate = Timestamp.now(); // Firebase timestamp
+
+    // Lấy thông tin người dùng đăng nhập
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            try {
+                const usersQuery = query(collection(firestore, "employees"), where("userId", "==", user.uid));
+                const userSnapshot = await getDocs(usersQuery);
+
+                if (!userSnapshot.empty) {
+                    const userData = userSnapshot.docs[0].data();
+                    const username = userData.username || "Unknown User";
+
+                    updatedData.editedBy = username; // Ghi lại ai đã chỉnh sửa
+
+                    // Tìm ticket có ticketId
+                    const ticketsQuery = query(collection(firestore, "incidentReports"), where("ticket", "==", ticketId));
+                    const querySnapshot = await getDocs(ticketsQuery);
+
+                    if (!querySnapshot.empty) {
+                        const ticketDoc = querySnapshot.docs[0];
+                        const oldData = ticketDoc.data(); // Lấy dữ liệu cũ
+
+                        await updateDoc(doc(firestore, "incidentReports", ticketDoc.id), updatedData);
+
+                        // Lưu lịch sử chỉnh sửa vào TicketLog
+                        await setDoc(doc(firestore, "TicketLog", logId), {
+                            ticketId,
+                            editedBy: username, 
+                            editedAt: Timestamp.now(),
+                            oldData: oldData,
+                            newData: updatedData
+                        });
+
+                        alert("Thông tin ticket đã được cập nhật thành công!");
+                        window.location.reload();
+                    } else {
+                        alert("Không tìm thấy ticket với ID: " + ticketId);
+                    }
+                } else {
+                    alert("Không tìm thấy thông tin người dùng.");
+                }
+            } catch (error) {
+                console.error("Lỗi khi cập nhật ticket:", error);
+                alert("Lỗi khi cập nhật ticket: " + error.message);
+            }
         } else {
-            alert("Không tìm thấy ticket với ID: " + ticketId);
+            alert("Bạn cần đăng nhập để cập nhật ticket.");
         }
-    } catch (error) {
-        console.error("Lỗi khi cập nhật ticket:", error);
-        alert("Lỗi khi cập nhật ticket: " + error.message);
-    }
+    });
 };
 
 
