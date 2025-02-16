@@ -86,6 +86,7 @@ async function loadPosts() {
             <h3 class="post-title">${post.title}</h3>
             <div class="post-content">${post.content}</div>
             <button class="edit-btn" data-title="${post.title}">Chỉnh sửa</button>
+            <button class="copy-btn" data-content="${post.content}">Copy</button>
         `;
         postList.prepend(postElement);
     });
@@ -156,3 +157,28 @@ document.getElementById("postList").addEventListener("click", async (e) => {
         }
     }
 });
+
+// Xử lý sự kiện copy nội dung bài viết
+document.getElementById("postList").addEventListener("click", async (e) => {
+    if (e.target.classList.contains("copy-btn")) {
+        let content = e.target.getAttribute("data-content");
+        copyToClipboard(content);
+    }
+});
+
+// Hàm sao chép nội dung vào clipboard
+async function copyToClipboard(htmlContent) {
+    try {
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                "text/html": new Blob([htmlContent], { type: "text/html" }),
+                "text/plain": new Blob([htmlContent], { type: "text/plain" }),
+            }),
+        ]);
+        alert("Đã sao chép nội dung với định dạng HTML!");
+    } catch (err) {
+        console.error("Lỗi khi sao chép:", err);
+        alert("Không thể sao chép nội dung!");
+    }
+}
+
