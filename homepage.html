@@ -7,6 +7,7 @@
     <title>Trang Chủ</title>
     <link rel="stylesheet" href="style_index.css">
     <link rel="icon" href="Logo_sc.png" type="image/png">
+        <script src="test.js" type="module"></script>
 </head>
 
 <body>
@@ -32,187 +33,15 @@
     <!-- Nội dung chính -->
     <div class="content" id="content">
         <h1>Trang chủ</h1>
-        <h2>Thống kê số liệu</h2>
-        <!-- Form tìm kiếm -->
-        <form id="search-form">
-            <div class="form-row">
-                <label for="startDate">Từ ngày:</label>
-                <input type="date" id="startDate" />
-
-                <label for="endDate">Đến ngày:</label>
-                <input type="date" id="endDate" />
-
-                <button type="submit">Tìm Kiếm</button>
-            </div>
-        </form>
-        <div class="table-container">
-
-            <h3>!SOS! Cảnh báo sự cố quá 5 ngày</h3>
-            <!-- Bảng hiển thị kết quả -->
-            <table id="issue-table">
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Giao hàng</th>
-                        <th>Chuyển hàng</th>
-                        <th>Cross border</th>
-                        <th>Tổng cộng</th>
-                    </tr>
-                </thead>
-                <tbody id="data-table">
-                    <tr>
-                        <td>234383 - Nguyễn Thành Vĩnh</td>
-                        <td id="234383-giao-hang">0</td>
-                        <td id="234383-chuyen-hang">0</td>
-                        <td id="234383-cross-border">0</td>
-                        <td id="234383-tong-cong">0</td>
-                      </tr>
-                      <tr>
-                        <td>18231 - Võ Dương Duy</td>
-                        <td id="18231-giao-hang">0</td>
-                        <td id="18231-chuyen-hang">0</td>
-                        <td id="18231-cross-border">0</td>
-                        <td id="18231-tong-cong">0</td>
-                      </tr>
-                      <tr>
-                        <td>178377 - Nguyễn Thị Hồng Nhung</td>
-                        <td id="178377-giao-hang">0</td>
-                        <td id="178377-chuyen-hang">0</td>
-                        <td id="178377-cross-border">0</td>
-                        <td id="178377-tong-cong">0</td>
-                      </tr>
-                      <tr>
-                          <td>28937 - Võ Thị Hồng Hẹn</td>
-                          <td id="28937-giao-hang">0</td>
-                          <td id="28937-chuyen-hang">0</td>
-                          <td id="28937-cross-border">0</td>
-                          <td id="28937-tong-cong">0</td>
-                        </tr>
-                  </tbody>
-            </table>
-
-            <h3>Thống kê sự cố</h3>
-            <!-- Bảng hiển thị kết quả -->
-            <table id="issue-table">
-                <thead>
-                    <tr>
-                        <th>Loại sự cố</th>
-                        <th>Hoàn tất</th>
-                        <th>Đang xử lý</th>
-                        <th>Theo dõi</th>
-                        <th>Hủy</th>
-                        <th>Tổng cộng</th>
-                    </tr>
-                </thead>
-                <tbody id="data-table">
-                    <tr>
-                        <td>Giao hàng</td>
-                        <td id="giao-hang-hoan-tat">0</td>
-                        <td id="giao-hang-dang-xu-ly">0</td>
-                        <td id="giao-hang-theo-doi">0</td>
-                        <td id="giao-hang-huy">0</td>
-                        <td id="giao-hang-compensation">0</td>
-                    </tr>
-                    <tr>
-                        <td>Chuyển hàng</td>
-                        <td id="chuyen-hang-hoan-tat">0</td>
-                        <td id="chuyen-hang-dang-xu-ly">0</td>
-                        <td id="chuyen-hang-theo-doi">0</td>
-                        <td id="chuyen-hang-huy">0</td>
-                        <td id="chuyen-hang-compensation">0</td>
-                    </tr>
-                    <tr>
-                        <td>Cross border</td>
-                        <td id="cross-hoan-tat">0</td>
-                        <td id="cross-dang-xu-ly">0</td>
-                        <td id="cross-theo-doi">0</td>
-                        <td id="cross-huy">0</td>
-                        <td id="cross-compensation">0</td>
-                    </tr>
-                    
-                  </tbody>
-            </table>
-
-            <h3>Thống kê dòng tiền</h3>
-            <!-- Bảng hiển thị kết quả -->
-            <table id="issue-table">
-                <thead>
-                    <tr>
-                        <th>Loại sự cố</th>
-                        <th>Chốt đền chênh lệch</th>
-                        <th>Chốt đền nguyên kiện</th>
-                        <th>Tổng cộng</th>
-                    </tr>
-                </thead>
-                <tbody id="data-table">
-                    <tr>
-                      <td>Giao hàng</td>
-                      <td id="giao-hang-hoan-tat">0</td>
-                      <td id="giao-hang-dang-xu-ly">0</td>
-                      <td id="giao-hang-tong-cong">0</td>
-                    </tr>
-                    <tr>
-                      <td>Chuyển hàng</td>
-                      <td id="chuyen-hang-hoan-tat">0</td>
-                      <td id="chuyen-hang-dang-xu-ly">0</td>
-                      <td id="chuyen-hang-tong-cong">0</td>
-                    </tr>
-                    <tr>
-                      <td>Cross border</td>
-                      <td id="cross-hoan-tat">0</td>
-                      <td id="cross-dang-xu-ly">0</td>
-                      <td id="cross-tong-cong">0</td>
-                    </tr>
-                  </tbody>
-            </table>
-            <h3>Thống kê sự cố theo user xử lý</h3>
-            <!-- Bảng hiển thị kết quả -->
-            <table id="issue-table">
-                <thead>
-                    <tr>
-                        <th>User xử lý</th>
-                        <th>Hoàn tất</th>
-                        <th>Đang xử lý</th>
-                        <th>Theo dõi</th>
-                        <th>Hủy</th>
-                        <th>Tổng cộng</th>
-                    </tr>
-                </thead>
-                <tbody id="data-table">
-                    <tr>
-                      <td>234383 - Nguyễn Thành Vĩnh</td>
-                      <td id="234383-hoan-tat">0</td>
-                      <td id="234383-dang-xu-ly">0</td>
-                      <td id="234383-theo-doi">0</td>
-                      <td id="234383-huy">0</td>
-                      <td id="234383-tong-cong">0</td>
-                    </tr>
-                    <tr>
-                      <td>18231 - Võ Dương Duy</td>
-                      <td id="18231-hoan-tat">0</td>
-                      <td id="18231-dang-xu-ly">0</td>
-                      <td id="18231-theo-doi">0</td>
-                      <td id="18231-huy">0</td>
-                      <td id="18231-tong-cong">0</td>
-                    </tr>
-                    <tr>
-                      <td>178377 - Nguyễn Thị Hồng Nhung</td>
-                      <td id="178377-hoan-tat">0</td>
-                      <td id="178377-dang-xu-ly">0</td>
-                      <td id="178377-theo-doi">0</td>
-                      <td id="178377-huy">0</td>
-                      <td id="178377-tong-cong">0</td>
-                    </tr>
-                    <tr>
-                        <td>28937 - Võ Thị Hồng Hẹn</td>
-                        <td id="28937-hoan-tat">0</td>
-                        <td id="28937-dang-xu-ly">0</td>
-                        <td id="28937-theo-doi">0</td>
-                        <td id="28937-huy">0</td>
-                        <td id="28937-tong-cong">0</td>
-                      </tr>
-                  </tbody>
-            </table>
+        <div class="container">
+            <h2>Số lượng sự cố quá 5 ngày</h2>
+            <div id="alert-list"></div>
+        </div>
+        
+        <div id="popup" class="popup">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h3>Danh sách sự cố cảnh báo</h3>
+            <ul id="ticket-list"></ul>
         </div>
     </div>
     <script>
