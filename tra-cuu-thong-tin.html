@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket management</title>
+    <link rel="stylesheet" href="ticket-management.css">
+    <link rel="icon" href="Logo_sc.png" type="image/png">
+    <script type="module" src="tra-cuu-thong-tin.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <div class="menu" id="menu">
+        <h3 id="welcome-message">Chào Mừng user</h3>
+        <a href="tra-cuu-thong-tin.html" id="menu-tra-cuu-thong-tin">Sự cố từ all ST</a>
+        <a href="formsc.html" id="menu-formsc" target="_blank">Form nhập SC giao hàng</a><br><br><br><br><br>
+        <p>Copyright <br>@Dương Duy - Thành Vĩnh</p>
+    </div>
+    
+    
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleMenu()"></button>
+
+    <div class="content" id="content">
+        <h1>Quản Lý Sự Cố (XLTT cập nhật)</h1>
+
+        <!-- Form tìm kiếm -->
+        <form id="search-form">
+            <div class="form-row">
+                <label for="startDate">Từ ngày:</label>
+                <input type="date" id="startDate" />
+                
+                <label for="endDate">Đến ngày:</label>
+                <input type="date" id="endDate" />
+
+                <label for="issueType">Loại Sự Cố</label>
+                <select id="issueType" name="issueType">
+                    <option value="">Tất cả</option>
+                    <option value="giao hàng">Giao hàng</option>
+                    <option value="crossborder">Giao hàng cross border</option>
+
+                </select>
+
+                <label for="status" style="display: none">Trạng Thái</label>
+                <select id="status" name="status" style="display: none">
+                    <option value="">Tất cả</option>
+                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option value="hoàn tất">Hoàn tất</option>
+                    <option value="theo dõi">Theo dõi</option>
+                    <option value="hủy">Hủy</option>
+                </select>
+
+                <label for="username">User xử lý</label>
+                <select id="username" name="username">
+                    <option value="">Tất cả</option>
+                    <option value="234383 - Nguyễn Thành Vĩnh">234383 - Nguyễn Thành Vĩnh</option>
+                    <option value="18231 - Võ Dương Duy">18231 - Võ Dương Duy</option>
+                    <option value="178377 - Nguyễn Thị Hồng Nhung">178377 - Nguyễn Thị Hồng Nhung</option>
+                    <option value="28937 - Võ Thị Hồng Hẹn">28937 - Võ Thị Hồng Hẹn</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="searchTerm">Tìm Kiếm</label>
+                <input type="text" id="searchTerm" name="searchTerm"
+                    placeholder="Nhập mã đơn hàng, mã bill GHTK, mã ticket">
+
+                <label for="searchType">Tìm Theo</label>
+                <select id="searchType">
+                    <option value="maSO">Mã SO</option>
+                    <option value="maDHGHTK">Mã bill Đối Tác</option>
+                    <option value="ticket">Mã Ticket</option>
+                </select>
+
+                <button type="submit">Tìm Kiếm</button>
+
+            </div>
+        </form>
+
+        <!-- Bảng hiển thị kết quả -->
+        <table id="issue-table">
+            <thead>
+                <tr>
+                    <th>Số TT</th>
+                    <th>Mã Đơn Hàng SO/CO</th>
+                    <th>Mã Bill đối tác</th>
+                    <th>Mã Ticket</th>
+                    <th>Loại Sự Cố</th>
+                    <th>Siêu Thị Gửi</th>
+                    <th>Siêu Thị Nhận</th>
+                    <th>Trạng Thái</th>
+                    <th>User xử lý</th>
+                    <th>Ngày Tạo Sự Cố</th>
+                </tr>
+            </thead>
+            <tbody id="issue-table-body">
+                <!-- Kết quả tìm kiếm sẽ hiển thị tại đây -->
+            </tbody>
+        </table>
+        <div id="pagination-controls" class="pagination-controls"></div>
+
+    </div>
+    <script>
+        function toggleMenu() {
+        const menu = document.getElementById('menu');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const content = document.getElementById('content');
+
+        menu.classList.toggle('hidden');
+        content.classList.toggle('shifted');
+    }
+    </script>
+</body>
+
+</html>

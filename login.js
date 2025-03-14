@@ -50,7 +50,7 @@ onAuthStateChanged(auth, async (user) => {
     } catch (error) {
       console.error("Error updating user status:", error);
     }
-    window.location.href = "homepage.html"; // Chuyển hướng đến trang đăng nhập
+    window.location.href = "/homepage.html"; // Chuyển hướng đến trang đăng nhập
   } else {
     console.log("No user is logged in");
     // Khi không đăng nhập, hiển thị form đăng nhập
