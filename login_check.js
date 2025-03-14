@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Function kiểm tra và điều chỉnh quyền truy cập của menu
 function restrictAccess(userRole) {
   const allowedPages = {
-    "Nhân viên": ["menu-homepage", "menu-newticket", "menu-formsc", "menu-ticket-management", "menu-money-management", "menu-form-xu-ly", "receiveTicketBtn"],
+    "Nhân viên": ["menu-homepage", "menu-newticket", "menu-formsc", "menu-ticket-management", "menu-money-management", "menu-form-xu-ly", "receiveTicketBtn", "menu-tra-cuu-thong-tin"],
     // Không cần liệt kê menu cho "admin"
   };
 
