@@ -68,9 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error fetching user data:", error);
         }
       } else {
+        alert("Please log in first.");
         window.location.href = "index.html";
-      //  alert("Please log in first.");
-
       }
     });
   }

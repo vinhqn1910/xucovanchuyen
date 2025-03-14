@@ -107,9 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } else {
       // Nếu người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
+      alert("Please log in first.");
       window.location.href = "index.html";
-     // alert("Please log in first.");
-
     }
   });
 });
