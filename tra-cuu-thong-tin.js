@@ -20,7 +20,7 @@ function getTodayDate() {
 document.addEventListener("DOMContentLoaded", () => {
     const today = getTodayDate();
     const oneMonthAgo = getOneMonthAgoDate();
-    
+
     document.getElementById("startDate").value = oneMonthAgo;
     document.getElementById("endDate").value = today;
 
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function getOneMonthAgoDate() {
     const date = new Date();
     date.setMonth(date.getMonth() - 1);
-    
+
     // Định dạng YYYY-MM-DD để phù hợp với input date
     return date.toISOString().split('T')[0];
 }
@@ -137,8 +137,11 @@ function displayPage(page) {
             <td>${data.maDHGHTK || "-"}</td>
             <td><a href="ticket-detail.html?ticket=${data.ticket}" target="_blank">${data.ticket || "-"}</a></td>
             <td>${data.issueType || "-"}</td>
+            <td>${data.suCo || "-"}</td>
+            <td>${data.userbaocao || "-"}</td>
+            <td>${data.compensationAmount || "-"}</td>
+            <td>${data.note || "-"}</td>
             <td>${data.sendingStore || "-"}</td>
-            <td>${data.receivingStore || "-"}</td>
             <td>${data.status || "-"}</td>
             <td>${data.username || "-"}</td>
             <td>${data.thoiGianGui || "-"}</td>
