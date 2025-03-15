@@ -11,17 +11,19 @@ const db = getFirestore(app);
 // Khởi tạo Quill
 var quill = new Quill("#editor", {
     theme: "snow",
-    placeholder: "Nhập nội dung bài viết...",
+    placeholder: "   Nhập nội dung bài viết...",
     modules: {
         toolbar: [
             ["bold", "italic", "underline", "strike"],
             [{ list: "ordered" }, { list: "bullet" }],
             [{ color: [] }, { background: [] }],
             [{ align: [] }],
+            ["link"], // Thêm tùy chọn chèn link
             ["clean"],
         ],
     },
 });
+
 
 // Tránh gọi loadPosts nhiều lần
 document.addEventListener("DOMContentLoaded", () => {
@@ -91,12 +93,23 @@ async function loadPosts() {
                 <span class="post-time">${post.timestamp}</span>
             </div>
             <h3 class="post-title">${post.title}</h3>
-            <div class="post-content">${decodeEntities(post.content)}</div>
-            <button class="copy-btn" data-content="${post.content}">Copy</button>
+            <div class="post-content">${autoLink(decodeEntities(post.content))}</div>
+<button class="copy-btn" data-content='${encodeURIComponent(post.content)}'>Copy</button>
+
             <button class="edit-btn" data-title="${post.title}">Chỉnh sửa</button>
-        `;
+        `;        
         postList.prepend(postElement);
     });
+    function autoLink(text) {
+        return text.replace(
+            /((https?:\/\/|www\.)[^\s<]+)/g,
+            (url) => {
+                let fullURL = url.startsWith("www.") ? `https://${url}` : url;
+                return `<a href="${fullURL}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+            }
+        );
+    }
+    
 }
 
 // Hàm giải mã HTML entities (&gt;, &nbsp;, &amp;, ...)
@@ -109,7 +122,8 @@ function decodeHTMLEntities(text) {
 // Xử lý sự kiện "Copy"
 document.getElementById("postList").addEventListener("click", async (e) => {
     if (e.target.classList.contains("copy-btn")) {
-        let contentHTML = e.target.getAttribute("data-content");
+        let contentHTML = decodeURIComponent(e.target.getAttribute("data-content"));
+
 
         // Tạo thẻ tạm để xử lý nội dung
         let tempElement = document.createElement("div");
