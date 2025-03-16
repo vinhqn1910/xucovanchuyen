@@ -327,7 +327,7 @@ function exportToExcel() {
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I' && e.key === "S")) {
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I' && e.key === 'S')) {
     e.preventDefault();
     alert('Action not allowed!');
   }
