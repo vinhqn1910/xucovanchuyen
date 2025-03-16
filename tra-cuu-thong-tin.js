@@ -322,3 +322,13 @@ function exportToExcel() {
     // Xuất file Excel
     XLSX.writeFile(workbook, "IncidentReports.xlsx");
 }
+
+// Vô hiệu hóa nhấn chuột phải và phím Developer Tools
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I' && e.key === "S")) {
+    e.preventDefault();
+    alert('Action not allowed!');
+  }
+});
