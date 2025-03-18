@@ -140,12 +140,14 @@ function displayPage(page) {
             <td>${data.suCo || "-"}</td>
             <td>${data.userbaocao || "-"}</td>
             <td>${data.compensationAmount || "-"}</td>
+            <td>${data.timeChoose || "-"}</td>
             <td>${data.note || "-"}</td>
             <td>${data.sendingStore || "-"}</td>
             <td>${data.status || "-"}</td>
             <td>${data.compensationType || "-"}</td>
             <td>${data.username || "-"}</td>
             <td>${data.thoiGianGui || "-"}</td>
+            <td>${data.thoiGianHen || "-"}</td>
         </tr>`;
         issueTableBody.innerHTML += row;
     });
