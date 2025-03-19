@@ -66,7 +66,7 @@ async function searchIssues(startDate, endDate, issueType, status, username, sea
         const querySnapshot = await getDocs(collectionRef);
 
         if (querySnapshot.empty) {
-            issueTableBody.innerHTML = "<tr><td colspan='10'>Không có dữ liệu</td></tr>";
+            issueTableBody.innerHTML = "<tr><td colspan='16'>Không có dữ liệu</td></tr>";
             return;
         }
 
