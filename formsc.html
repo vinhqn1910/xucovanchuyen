@@ -46,7 +46,16 @@
       <textarea id="note" name="note" placeholder="Nhập thông tin thêm"></textarea>
 
       <label for="thoiGian">Thời gian hẹn phản hồi:</label>
-      <input type="datetime-local" id="thoiGian" name="thoiGian" >
+      <input type="datetime-local" id="thoiGian" name="thoiGian">
+      
+      <!-- Gợi ý thời gian -->
+      <label>Gợi ý:</label>
+      <div class="time-suggestion-container">
+        <button type="button" class="time-suggestion" data-hours="36">36 giờ</button>
+        <button type="button" class="time-suggestion" data-hours="48">48 giờ</button>
+        <button type="button" class="time-suggestion" data-hours="72">72 giờ</button>
+      </div>
+      <input type="hidden" id="timeChoose" name="timeChoose">
 
       <button type="submit">Gửi thông tin</button>
     </form>
