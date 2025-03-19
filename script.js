@@ -46,6 +46,23 @@ async function checkAndGenerateTicket(maSO) {
   };
 }
 
+// Xử lý khi bấm vào các nút thời gian gợi ý
+document.querySelectorAll('.time-suggestion').forEach(button => {
+  button.addEventListener('click', () => {
+    const hoursToAdd = parseInt(button.getAttribute('data-hours'), 10);
+    const now = new Date();
+    now.setHours(now.getHours() + hoursToAdd);
+
+    // Định dạng thành datetime-local
+    const formattedDateTime = now.toISOString().slice(0, 16);
+    document.getElementById('thoiGian').value = formattedDateTime;
+
+    // Lưu giá trị vào input ẩn để lưu vào Firestore
+    document.getElementById('timeChoose').value = `${hoursToAdd} giờ`;
+  });
+});
+
+
 // Xử lý gửi form
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -62,7 +79,9 @@ form.addEventListener('submit', async (e) => {
     thoiGianHen: form.thoiGian.value,
     thoiGianGui: formatDateTime(new Date()),
     status: "Tạo mới",
-    issueType: "giao hàng"
+    issueType: "giao hàng",
+    timeChoose: form.timeChoose.value, // Thêm thông tin thời gian được chọn
+
   };
 
   Swal.fire({
@@ -78,7 +97,7 @@ form.addEventListener('submit', async (e) => {
     if (exists) {
       Swal.fire({
         title: `Cập nhật trùng TICKET: #${existingTicket}`,
-        text: 'Vui lòng liên hệ 18231 - Duy, 234383 - Vĩnh, 178377 - Nhung, 28937 - Hẹn để chỉnh sửa thông tin.',
+        text: 'Vui lòng liên hệ 18231 - Duy, 234383 - Vĩnh, 178377 - Nhung để chỉnh sửa thông tin.',
         icon: 'warning',
         confirmButtonText: 'OK'
       });
@@ -105,15 +124,5 @@ form.addEventListener('submit', async (e) => {
       confirmButtonText: 'OK'
     });
     console.error("Error adding document: ", error);
-  }
-});
-
-// Vô hiệu hóa nhấn chuột phải và phím Developer Tools
-document.addEventListener('contextmenu', (e) => e.preventDefault());
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I' && e.key === 'S')) {
-    e.preventDefault();
-    alert('Action not allowed!');
   }
 });
